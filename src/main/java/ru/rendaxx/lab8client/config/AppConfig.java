@@ -1,2 +1,9 @@
-package ru.rendaxx.lab8client.config;public class AppConfig {
+package ru.rendaxx.lab8client.config;
+
+import org.springframework.context.annotation.Bean;
+
+import javax.swing.*;
+
+public class AppConfig {
+
 }

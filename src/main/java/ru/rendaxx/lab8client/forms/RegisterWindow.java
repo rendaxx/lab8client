@@ -1,2 +1,4 @@
-package ru.rendaxx.lab8client.forms;public class RegisterWindow {
+package ru.rendaxx.lab8client.forms;
+
+public class RegisterWindow {
 }

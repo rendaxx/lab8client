@@ -1,60 +1,38 @@
 package ru.rendaxx.lab8client;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ApplicationContext;
-import ru.rendaxx.lab8client.forms.AuthWindow;
+import ru.rendaxx.lab8client.forms.AuthForm;
+import ru.rendaxx.lab8client.frame.AuthFrame;
 
 import javax.swing.*;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
+import java.util.ResourceBundle;
 
 @SpringBootApplication
-public class SwingApp extends JFrame {
+public class SwingApp {
 
     public SwingApp() {
         initUI();
     }
 
     private void initUI() {
-        AuthWindow authWindow = new AuthWindow();
-
-        JLayeredPane layeredPane = new JLayeredPane();
-        setContentPane(layeredPane);
-
-        layeredPane.add(authWindow.getLoginPanel());
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
-        setVisible(true);
-    }
-
-    private void createLayout(JComponent... arg) {
-
-        var pane = getContentPane();
-        var gl = new GroupLayout(pane);
-        pane.setLayout(gl);
-
-        gl.setAutoCreateContainerGaps(true);
-
-        gl.setHorizontalGroup(gl.createSequentialGroup()
-                .addComponent(arg[0])
-        );
-
-        gl.setVerticalGroup(gl.createSequentialGroup()
-                .addComponent(arg[0])
-        );
+        new AuthFrame();
     }
 
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException |
+                 InstantiationException ignore) {}
+
         var context = new SpringApplicationBuilder(SwingApp.class).headless(false)
                 .web(WebApplicationType.NONE).run(args);
 
-        EventQueue.invokeLater(() -> {
-            SwingApp ex = context.getBean(SwingApp.class);
-            ex.setVisible(true);
-        });
+//        EventQueue.invokeLater(() -> {
+//            SwingApp ex = context.getBean(SwingApp.class);
+//            ex.setVisible(true);
+//        });
     }
 }

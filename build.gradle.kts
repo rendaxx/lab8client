@@ -2,6 +2,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.2.5"
     id("io.spring.dependency-management") version "1.1.4"
+
 }
 
 group = "ru.rendaxx"
@@ -22,6 +23,8 @@ repositories {
 }
 
 dependencies {
+//    runtimeOnly("com.jetbrains.intellij.java:java-gui-forms-rt:241.15989.178")
+//    runtimeOnly("com.jetbrains.intellij.java:java-gui-forms-compiler:241.15989.178")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.boot:spring-boot-starter-web")
     compileOnly("org.projectlombok:lombok")

@@ -1,8 +1,10 @@
 package ru.rendaxx.lab8client;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationContext;
 import ru.rendaxx.lab8client.forms.AuthForm;
 import ru.rendaxx.lab8client.frame.AuthFrame;
 
@@ -12,15 +14,6 @@ import java.util.ResourceBundle;
 
 @SpringBootApplication
 public class SwingApp {
-
-    public SwingApp() {
-        initUI();
-    }
-
-    private void initUI() {
-        new AuthFrame();
-    }
-
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -30,6 +23,7 @@ public class SwingApp {
         var context = new SpringApplicationBuilder(SwingApp.class).headless(false)
                 .web(WebApplicationType.NONE).run(args);
 
+        context.getBean(AuthFrame.class);
 //        EventQueue.invokeLater(() -> {
 //            SwingApp ex = context.getBean(SwingApp.class);
 //            ex.setVisible(true);

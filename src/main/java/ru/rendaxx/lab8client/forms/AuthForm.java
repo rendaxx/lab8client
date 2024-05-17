@@ -2,6 +2,10 @@ package ru.rendaxx.lab8client.forms;
 
 import lombok.Getter;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import ru.rendaxx.lab8client.client.LoginClient;
 import ru.rendaxx.lab8client.frame.RegisterFrame;
 import ru.rendaxx.lab8client.util.UserCredentials;
@@ -11,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @Log
+@Component
+@Scope("prototype")
 public class AuthForm {
     private JTextField usernameField;
     @Getter
@@ -21,18 +27,18 @@ public class AuthForm {
     private JLabel passwordLabel;
     private JLabel errorLabel;
     private JButton registerButton;
-    private JLabel registerLabel;
 
     private RegisterFrame registrationFrame;
 
-    public AuthForm() {
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                log.info("Clicked register button");
-                if (registrationFrame == null || !registrationFrame.isDisplayable()) {
-                    registrationFrame = new RegisterFrame();
-                }
+    private ApplicationContext applicationContext;
+
+    @Autowired
+    public AuthForm(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+        registerButton.addActionListener(e -> {
+            log.info("Clicked register button");
+            if (registrationFrame == null || !registrationFrame.isDisplayable()) {
+                registrationFrame = applicationContext.getBean(RegisterFrame.class);
             }
         });
 
@@ -41,7 +47,7 @@ public class AuthForm {
             String username = usernameField.getText();
             char[] password = passwordField.getPassword();
 
-            String response = new LoginClient().login(new UserCredentials(username, password));
+            String response = applicationContext.getBean(LoginClient.class).login(new UserCredentials(username, password));
 
             if (response.equals("ye")) {
 

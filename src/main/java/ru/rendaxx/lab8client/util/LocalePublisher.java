@@ -1,21 +1,39 @@
 package ru.rendaxx.lab8client.util;
 
-import jakarta.annotation.Resource;
+import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Log
 @Component
 public class LocalePublisher {
-    @Resource(name = "myList")
-    List<LocaleChangeListener> listeners; //TODO delete not valid elements
+    private List<SetTextListener> listeners;
 
+    @Autowired
+    public LocalePublisher(@Qualifier("myListenersList") List<SetTextListener> listeners) {
+        this.listeners = listeners;
+//        new Timer().scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                log.info("Deleted invalid subscribers");
+//                deleteInvalidSubscribers();
+//            }
+//        }, 1000, 30000); TODO
+    }
 
-    public void addSubscriber(LocaleChangeListener listener) {
+    public void addSubscriber(SetTextListener listener) {
         listeners.add(listener);
     }
 
+    private void deleteInvalidSubscribers() {
+        listeners.removeIf(o -> !o.isVisible());
+    }
+
     public void notifySubscribers() {
-        listeners.forEach(LocaleChangeListener::localeChanged);
+        deleteInvalidSubscribers();
+        listeners.forEach(SetTextListener::setText);
     }
 }

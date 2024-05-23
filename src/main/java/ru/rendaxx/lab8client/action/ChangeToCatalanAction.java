@@ -8,11 +8,11 @@ import java.util.Locale;
 
 
 @Component
-public class ChangeToRussianAction extends ChangeLanguageAction {
+public class ChangeToCatalanAction extends ChangeLanguageAction {
 
     @Autowired
-    public ChangeToRussianAction(LocalePublisher publisher) {
-        super(publisher, Locale.forLanguageTag("ru"));
+    public ChangeToCatalanAction(LocalePublisher publisher) {
+        super(publisher, Locale.forLanguageTag("ca"));
     }
 
 }

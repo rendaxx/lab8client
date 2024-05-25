@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import ru.rendaxx.lab8client.client.UpdateHandler;
 import ru.rendaxx.lab8client.forms.DefaultMenuBar;
 import ru.rendaxx.lab8client.forms.MainForm;
 import ru.rendaxx.lab8client.util.LocalePublisher;
 import ru.rendaxx.lab8client.util.SetTextListener;
+import ru.rendaxx.lab8client.util.UpdateListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +17,7 @@ import java.util.ResourceBundle;
 
 @Component
 @Scope("prototype")
-public class MainFrame extends JFrame implements SetTextListener {
+public class MainFrame extends JFrame implements SetTextListener, UpdateListener {
 
     private final ApplicationContext applicationContext;
 
@@ -27,6 +29,7 @@ public class MainFrame extends JFrame implements SetTextListener {
 
     private void initUI() {
         applicationContext.getBean(LocalePublisher.class).addSubscriber(this);
+        applicationContext.getBean(UpdateHandler.class).addListener(this);
 
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon.png")));
 
@@ -44,5 +47,10 @@ public class MainFrame extends JFrame implements SetTextListener {
     public void setText() {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("bundles/main");
         setTitle(resourceBundle.getString("main.frame.title"));
+    }
+
+    @Override
+    public void update() {
+        SwingUtilities.updateComponentTreeUI(this);
     }
 }

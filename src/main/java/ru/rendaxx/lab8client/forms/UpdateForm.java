@@ -1,21 +1,21 @@
 package ru.rendaxx.lab8client.forms;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.rendaxx.lab8client.client.AddCommandClient;
+import ru.rendaxx.lab8client.client.UpdateCommandClient;
 import ru.rendaxx.lab8client.model.object.OrganizationDto;
 import ru.rendaxx.lab8client.model.object.OrganizationType;
 import ru.rendaxx.lab8client.util.UserSession;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
+@Getter
 @Component
-public class AddCommandForm {
-    @Getter
+public class UpdateForm {
     private JPanel rootPanel;
     private JTextField nameField;
     private JButton addButton;
@@ -26,13 +26,17 @@ public class AddCommandForm {
     private JTextField employeesCountField;
     private JTextField streetField;
     private JTextField zipCodeField;
+
+    @Setter
+    private Long id; // TODO бля какой кринж
+
     private JComboBox<OrganizationType> comboBox1;
 
     private ApplicationContext applicationContext;
     private UserSession userSession;
 
     @Autowired
-    public AddCommandForm(ApplicationContext applicationContext, UserSession userSession) {
+    public UpdateForm(ApplicationContext applicationContext, UserSession userSession) {
         this.applicationContext = applicationContext;
         this.userSession = userSession;
         addButton.addActionListener(e -> {
@@ -45,8 +49,8 @@ public class AddCommandForm {
             OrganizationType organizationType = (OrganizationType) comboBox1.getSelectedItem();
             String street = streetField.getText();
             String zipCode = zipCodeField.getText();
-            applicationContext.getBean(AddCommandClient.class).add(
-                    new OrganizationDto(name, x, y, annualTurnover, fullName, employeesCount, organizationType, street, zipCode, userSession.getUsername()));
+            applicationContext.getBean(UpdateCommandClient.class).update(
+                    new OrganizationDto(id, name, x, y, annualTurnover, fullName, employeesCount, organizationType, street, zipCode, userSession.getUsername()));
         });
     }
 

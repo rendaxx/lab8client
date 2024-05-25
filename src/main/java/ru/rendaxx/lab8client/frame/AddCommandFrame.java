@@ -35,7 +35,7 @@ public class AddCommandFrame extends JFrame implements SetTextListener {
         JMenuBar menuBar = applicationContext.getBean(DefaultMenuBar.class);
         setJMenuBar(menuBar);
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
         setVisible(true);
     }

@@ -8,6 +8,7 @@ import ru.rendaxx.lab8client.model.object.OrganizationDto;
 import ru.rendaxx.lab8client.model.object.OrganizationType;
 
 import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ import java.util.function.Supplier;
 
 @Component
 @Scope("prototype")
-public class OrganizationTableModel implements TableModel {
+public class OrganizationTableModel extends AbstractTableModel {
 
     private OrganizationService organizationService;
     private Set<TableModelListener> listeners = new HashSet<>();
@@ -131,5 +132,9 @@ public class OrganizationTableModel implements TableModel {
     @Override
     public void removeTableModelListener(TableModelListener l) {
         listeners.remove(l);
+    }
+
+    public OrganizationDto getData(int rowIndex) {
+        return (OrganizationDto) organizationService.getOrganizationList().toArray()[rowIndex];
     }
 }

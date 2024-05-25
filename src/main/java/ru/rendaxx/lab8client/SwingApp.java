@@ -7,6 +7,7 @@ import ru.rendaxx.lab8client.frame.AddCommandFrame;
 import ru.rendaxx.lab8client.frame.AuthFrame;
 
 import javax.swing.*;
+import java.awt.*;
 
 @SpringBootApplication
 public class SwingApp {
@@ -19,10 +20,8 @@ public class SwingApp {
         var context = new SpringApplicationBuilder(SwingApp.class).headless(false)
                 .web(WebApplicationType.NONE).run(args);
 
-        context.getBean(AuthFrame.class);
-//        EventQueue.invokeLater(() -> {
-//            SwingApp ex = context.getBean(SwingApp.class);
-//            ex.setVisible(true);
-//        });
+        EventQueue.invokeLater(() -> {
+            context.getBean(AuthFrame.class);
+        });
     }
 }

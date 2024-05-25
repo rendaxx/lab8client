@@ -14,6 +14,7 @@ import ru.rendaxx.lab8client.util.SetTextListener;
 import ru.rendaxx.lab8client.util.UserCredentials;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -47,7 +48,7 @@ public class AuthForm implements SetTextListener {
         registerButton.addActionListener(e -> {
             log.info("Clicked register button");
             if (registrationFrame == null || !registrationFrame.isDisplayable()) {
-                registrationFrame = applicationContext.getBean(RegisterFrame.class);
+                EventQueue.invokeLater(() -> registrationFrame = applicationContext.getBean(RegisterFrame.class));
             }
         });
 
@@ -67,7 +68,7 @@ public class AuthForm implements SetTextListener {
                 if (registrationFrame != null) registrationFrame.dispose();
                 SwingUtilities.windowForComponent(authPanel).dispose();
                 Arrays.fill(password, (char) 0);
-                applicationContext.getBean(MainFrame.class);
+                EventQueue.invokeLater(() -> applicationContext.getBean(MainFrame.class));
             }
 
             ResourceBundle resourceBundle = ResourceBundle.getBundle("bundles/login");

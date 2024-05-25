@@ -12,7 +12,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import ru.rendaxx.lab8client.model.CollectionService;
 import ru.rendaxx.lab8client.model.object.OrganizationDto;
 import ru.rendaxx.lab8client.util.LocalDateTypeAdapter;
+import ru.rendaxx.lab8client.util.UpdateListener;
 
+import javax.swing.*;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.*;
@@ -22,6 +24,7 @@ import java.util.*;
 public class UpdateHandler extends TextWebSocketHandler {
 
     CollectionService<OrganizationDto> collectionService;
+    List<UpdateListener> updateListeners = new ArrayList<>();
 
     @Autowired
     public UpdateHandler(CollectionService<OrganizationDto> collectionService) {
@@ -38,5 +41,10 @@ public class UpdateHandler extends TextWebSocketHandler {
                 registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter()).create().fromJson(message.getPayload(), setType);
 
         collectionService.load(items);
+        updateListeners.forEach(o -> SwingUtilities.invokeLater(o::update));
+    }
+
+    public void addListener(UpdateListener listener) {
+        updateListeners.add(listener);
     }
 }

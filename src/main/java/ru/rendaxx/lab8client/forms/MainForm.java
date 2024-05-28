@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ru.rendaxx.lab8client.client.DeleteCommandClient;
-import ru.rendaxx.lab8client.client.UpdateCommandClient;
 import ru.rendaxx.lab8client.client.UpdateHandler;
 import ru.rendaxx.lab8client.frame.AddCommandFrame;
 import ru.rendaxx.lab8client.frame.CanvasFrame;
@@ -18,12 +17,16 @@ import ru.rendaxx.lab8client.util.UpdateListener;
 import ru.rendaxx.lab8client.util.UserSession;
 
 import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ResourceBundle;
 
 @Log
 @Component
@@ -36,6 +39,9 @@ public class MainForm implements SetTextListener, UpdateListener {
     private JTable organizationTable;
     private JLabel usernameLabel;
     private JScrollPane scrollPane;
+    private JTextField filterField;
+    private JLabel filterLabel;
+    private JSpinner columSpinner;
 
     private ApplicationContext applicationContext;
 
@@ -52,29 +58,13 @@ public class MainForm implements SetTextListener, UpdateListener {
     private void createUIComponents() {
         applicationContext.getBean(LocalePublisher.class).addSubscriber(this);
         applicationContext.getBean(UpdateHandler.class).addListener(this);
-        organizationTable = new JTable(applicationContext.getBean(OrganizationTableModel.class));
+
+        OrganizationTableModel model = applicationContext.getBean(OrganizationTableModel.class);
+        organizationTable = new JTable(model);
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
+        organizationTable.setRowSorter(sorter);
 
         final JPopupMenu popupMenu = new JPopupMenu();
-
-        popupMenu.addPopupMenuListener(new PopupMenuListener() {
-            @Override
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                int rowAtPoint = organizationTable.rowAtPoint(SwingUtilities.convertPoint(popupMenu, new Point(0, 0), organizationTable));
-                if (rowAtPoint > -1) {
-                    organizationTable.setRowSelectionInterval(rowAtPoint, rowAtPoint);
-                }
-            }
-
-            @Override
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-
-            }
-
-            @Override
-            public void popupMenuCanceled(PopupMenuEvent e) {
-
-            }
-        });
 
         JMenuItem deleteItem = new JMenuItem("Delete");
         deleteItem.addActionListener(e->{
@@ -87,12 +77,75 @@ public class MainForm implements SetTextListener, UpdateListener {
             int row = organizationTable.getSelectedRow();
             UpdateCommandFrame updateFrame = applicationContext.getBean(UpdateCommandFrame.class);
             updateFrame.setFields(((OrganizationTableModel) organizationTable.getModel()).getData(row));
-//            applicationContext.getBean(UpdateCommandClient.class).update()
         });
 
         popupMenu.add(deleteItem);
         popupMenu.add(updateItem);
+
+        organizationTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int r = organizationTable.rowAtPoint(e.getPoint());
+                if (r >= 0 && r < organizationTable.getRowCount()) {
+                    organizationTable.setRowSelectionInterval(r, r);
+                } else {
+                    organizationTable.clearSelection();
+                }
+
+                int rowindex = organizationTable.getSelectedRow();
+                if (rowindex < 0)
+                    return;
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+
         organizationTable.setComponentPopupMenu(popupMenu);
+
+        SpinnerNumberModel model1 = new SpinnerNumberModel(0, 0, 11, 1);
+        columSpinner = new JSpinner(model1);
+
+        filterField = new JTextField();
+        filterField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filter(filterField.getText(), (int) columSpinner.getValue());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filter(filterField.getText(), (int) columSpinner.getValue());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            private void filter(String text, int column) {
+                if (text.trim().isEmpty()) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, column));
+                }
+            }
+        });
+
+        columSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                filter(filterField.getText(), (int) columSpinner.getValue());
+            }
+
+            private void filter(String text, int column) {
+                if (text.trim().isEmpty()) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, column));
+                }
+            }
+        });
 
         usernameLabel = new JLabel();
         setText();
@@ -101,6 +154,11 @@ public class MainForm implements SetTextListener, UpdateListener {
     @Override
     public void setText() {
         usernameLabel.setText(applicationContext.getBean(UserSession.class).getUsername());
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("bundles/main");
+        if (canvasButton == null || addButton == null) return;
+        canvasButton.setText(resourceBundle.getString("form.canvas.button"));
+        addButton.setText(resourceBundle.getString("form.add.button"));
+        filterLabel.setText(resourceBundle.getString("form.filter.label"));
     }
 
     @Override

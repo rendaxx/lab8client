@@ -3,6 +3,7 @@ package ru.rendaxx.lab8client.forms;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ru.rendaxx.lab8client.client.AddCommandClient;
 import ru.rendaxx.lab8client.model.object.OrganizationDto;
@@ -13,9 +14,11 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
+@Getter
 @Component
+@Scope("prototype")
 public class AddCommandForm {
-    @Getter
     private JPanel rootPanel;
     private JTextField nameField;
     private JButton addButton;

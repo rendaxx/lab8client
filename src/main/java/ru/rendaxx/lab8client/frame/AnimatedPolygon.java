@@ -19,13 +19,14 @@ public class AnimatedPolygon implements ActionListener {
     OrganizationDto organizationDto;
     Polygon polygon;
     Timer timer;
-    private static final int ROTATE_DEGREE = 45;
+    private static final int ROTATE_DEGREE = 36;
     int degree = 0;
 
     public AnimatedPolygon(CanvasPanel canvasPanel, OrganizationDto organizationDto) {
         this.canvasPanel = canvasPanel;
+        this.organizationDto = organizationDto;
         this.polygon = createPolygon(organizationDto);
-        timer = new Timer(1000, this);
+        timer = new Timer(40, this);
     }
 
     public static Polygon createPolygon(OrganizationDto org) {
@@ -36,7 +37,7 @@ public class AnimatedPolygon implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        canvasPanel.addPolygon(polygon);
+        canvasPanel.addPolygon(organizationDto, polygon);
         canvasPanel.repaint();
         if (degree >= 360) {
             timer.stop();
@@ -49,9 +50,9 @@ public class AnimatedPolygon implements ActionListener {
     }
 
     private void nextPolygon() {
-        canvasPanel.removePolygon(polygon);
+        canvasPanel.removePolygon(organizationDto);
         polygon = rotatePolygon(polygon, (float) -Math.toRadians(ROTATE_DEGREE));
-        canvasPanel.addPolygon(polygon);
+        canvasPanel.addPolygon(organizationDto, polygon);
     }
 
     private Polygon rotatePolygon(Polygon polygon, float radiansTheta) {

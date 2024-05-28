@@ -81,7 +81,7 @@ public class OrganizationTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex != 0 && columnIndex != getColumnCount() - 1;
+        return false;
     }
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {

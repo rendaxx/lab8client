@@ -13,6 +13,7 @@ import ru.rendaxx.lab8client.util.UpdateListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 
 @Component
@@ -38,7 +39,10 @@ public class MainFrame extends JFrame implements SetTextListener, UpdateListener
         JMenuBar menuBar = applicationContext.getBean(DefaultMenuBar.class);
         setJMenuBar(menuBar);
 
+
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setText();
         pack();
         setVisible(true);
     }

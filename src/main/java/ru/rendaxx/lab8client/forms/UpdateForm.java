@@ -28,7 +28,7 @@ public class UpdateForm {
     private JTextField zipCodeField;
 
     @Setter
-    private Long id; // TODO бля какой кринж
+    private Long id;
 
     private JComboBox<OrganizationType> comboBox1;
 

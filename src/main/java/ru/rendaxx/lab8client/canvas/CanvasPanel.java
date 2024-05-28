@@ -18,7 +18,7 @@ import static java.lang.Math.abs;
 @Scope("prototype")
 public class CanvasPanel extends JPanel {
     @Getter
-    private Set<Polygon> polygons = new LinkedHashSet<>();
+    private Map<OrganizationDto, Polygon> polygons = new LinkedHashMap<>();
     private HashMap<String, Color> colorByUsername = new HashMap<>();
     @Getter
     private Set<OrganizationDto> paintedObjects = new HashSet<>();
@@ -33,17 +33,28 @@ public class CanvasPanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        for (Polygon s : polygons) {
-            g2.fillPolygon(s);
+        for (var entry : polygons.entrySet()) {
+            if (colorByUsername.containsKey(entry.getKey().getCreatorName())) {
+                g2.setColor(colorByUsername.get(entry.getKey().getCreatorName()));
+            } else {
+                Random random = new Random();
+                int red = random.nextInt(255);
+                int green = random.nextInt(255);
+                int blue = random.nextInt(255);
+                Color color = new Color(red, green, blue);
+                colorByUsername.put(entry.getKey().getCreatorName(), color);
+                g2.setColor(color);
+            }
+            g2.fillPolygon(entry.getValue());
         }
     }
 
-    public void addPolygon(Polygon s) {
-        polygons.add(s);
+    public void addPolygon(OrganizationDto org, Polygon polygon) {
+        polygons.put(org, polygon);
     }
 
-    public void removePolygon(Polygon s) {
-        polygons.remove(s);
+    public void removePolygon(OrganizationDto organizationDto) {
+        polygons.remove(organizationDto);
     }
 
     public void addPrintedOrg(OrganizationDto org) {
@@ -52,10 +63,6 @@ public class CanvasPanel extends JPanel {
 
     public boolean has(OrganizationDto organizationDto) {
         return paintedObjects.contains(organizationDto);
-    }
-
-    public void removeInvalid(Set<OrganizationDto> set) {
-
     }
 
     public static Polygon convertShapeToPolygon(Shape shape) {

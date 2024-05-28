@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ru.rendaxx.lab8client.canvas.CanvasPanel;
-import ru.rendaxx.lab8client.canvas.OrganizationsImage;
+import ru.rendaxx.lab8client.client.DeleteCommandClient;
 import ru.rendaxx.lab8client.client.UpdateHandler;
 import ru.rendaxx.lab8client.forms.DefaultMenuBar;
 import ru.rendaxx.lab8client.model.OrganizationService;
@@ -16,17 +16,12 @@ import ru.rendaxx.lab8client.util.UpdateListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.PathIterator;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
-
-import static java.lang.Math.abs;
-import static ru.rendaxx.lab8client.frame.AnimatedPolygon.createPolygon;
 
 @Component
 @Scope("prototype")
@@ -34,7 +29,7 @@ public class CanvasFrame extends JFrame implements SetTextListener, UpdateListen
 
     private ApplicationContext applicationContext;
     private OrganizationService organizationService;
-    CanvasPanel canvasPanel;
+    final CanvasPanel canvasPanel;
     JScrollPane jScrollPane;
 
     @Autowired
@@ -51,9 +46,44 @@ public class CanvasFrame extends JFrame implements SetTextListener, UpdateListen
 
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon.png")));
 
-
-        canvasPanel = applicationContext.getBean(CanvasPanel.class);
         canvasPanel.setPreferredSize(new Dimension(10000, 10000));
+
+        canvasPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                List<OrganizationDto> list = new ArrayList<>();
+                for (var entry : canvasPanel.getPolygons().entrySet()) {
+                    if (entry.getValue().contains(e.getPoint())) {
+                        list.add(entry.getKey());
+                    }
+                }
+                JPopupMenu popupMenu = new JPopupMenu();
+                for (OrganizationDto org : list) {
+                    JMenu jMenu = new JMenu(org.getName());
+                    popupMenu.add(jMenu);
+                    JMenuItem deleteItem = new JMenuItem("Delete");
+                    deleteItem.addActionListener(event->{
+                        applicationContext.getBean(DeleteCommandClient.class).delete(org);
+                    });
+
+                    JMenuItem updateItem = new JMenuItem("Update");
+                    updateItem.addActionListener(event -> {
+                        UpdateCommandFrame updateFrame = applicationContext.getBean(UpdateCommandFrame.class);
+                        updateFrame.setFields(org);
+                    });
+
+                    jMenu.add(deleteItem);
+                    jMenu.add(updateItem);
+                }
+                JMenuItem addCommand = new JMenuItem("Add new organization");
+                addCommand.addActionListener(event -> {
+                    applicationContext.getBean(AddCommandFrame.class);
+                });
+                popupMenu.add(addCommand);
+                popupMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        });
+
         jScrollPane = new JScrollPane(canvasPanel);
 
         add(jScrollPane);
@@ -63,6 +93,7 @@ public class CanvasFrame extends JFrame implements SetTextListener, UpdateListen
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
+        setText();
         setVisible(true);
         update();
     }
@@ -70,7 +101,7 @@ public class CanvasFrame extends JFrame implements SetTextListener, UpdateListen
     @Override
     public void setText() {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("bundles/main");
-        setTitle(resourceBundle.getString("main.frame.title"));
+        setTitle(resourceBundle.getString("form.canvas.button"));
     }
 
     @Override
@@ -82,14 +113,15 @@ public class CanvasFrame extends JFrame implements SetTextListener, UpdateListen
                 canvasPanel.addPrintedOrg(org);
             }
         }
-        for (OrganizationDto org : canvasPanel.getPaintedObjects()) {
+
+        Iterator<OrganizationDto> it = canvasPanel.getPaintedObjects().iterator();
+        while (it.hasNext()) {
+            OrganizationDto org = it.next();
             if (!organizationService.getOrganizationList().contains(org)) {
-                canvasPanel.getPaintedObjects().remove(org);
-                canvasPanel.removePolygon(createPolygon(org));
+                it.remove();
+                canvasPanel.removePolygon(org);
             }
         }
+        canvasPanel.repaint();
     }
-
-
-
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.rendaxx.lab8client.forms.AddCommandForm;
 import ru.rendaxx.lab8client.forms.DefaultMenuBar;
 import ru.rendaxx.lab8client.forms.MainForm;
+import ru.rendaxx.lab8client.model.object.OrganizationDto;
 import ru.rendaxx.lab8client.util.LocalePublisher;
 import ru.rendaxx.lab8client.util.SetTextListener;
 
@@ -18,6 +19,7 @@ import java.awt.*;
 public class AddCommandFrame extends JFrame implements SetTextListener {
 
     private final ApplicationContext applicationContext;
+    private AddCommandForm addCommandForm;
 
     @Autowired
     public AddCommandFrame(ApplicationContext applicationContext) {
@@ -30,7 +32,8 @@ public class AddCommandFrame extends JFrame implements SetTextListener {
 
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon.png")));
 
-        getContentPane().add(applicationContext.getBean(AddCommandForm.class).getRootPanel());
+        addCommandForm = applicationContext.getBean(AddCommandForm.class);
+        add(addCommandForm.getRootPanel());
 
         JMenuBar menuBar = applicationContext.getBean(DefaultMenuBar.class);
         setJMenuBar(menuBar);
@@ -38,6 +41,11 @@ public class AddCommandFrame extends JFrame implements SetTextListener {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
         setVisible(true);
+    }
+
+    public void setFields(OrganizationDto organization) {
+        addCommandForm.getXField().setText(organization.getX().toString());
+        addCommandForm.getYField().setText(organization.getY().toString());
     }
 
     @Override

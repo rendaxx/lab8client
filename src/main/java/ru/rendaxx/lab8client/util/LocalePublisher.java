@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.swing.*;
 import java.util.List;
+import java.util.TimerTask;
 
 @Log
 @Component
@@ -21,7 +23,7 @@ public class LocalePublisher {
 //                log.info("Deleted invalid subscribers");
 //                deleteInvalidSubscribers();
 //            }
-//        }, 1000, 30000); TODO
+//        }, 1000, 30000);
     }
 
     public void addSubscriber(SetTextListener listener) {

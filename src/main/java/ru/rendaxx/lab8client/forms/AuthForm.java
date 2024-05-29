@@ -1,6 +1,7 @@
 package ru.rendaxx.lab8client.forms;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -23,6 +24,7 @@ import java.util.ResourceBundle;
 @Log
 @Component
 @Scope("prototype")
+@Getter
 public class AuthForm implements SetTextListener {
     private JTextField usernameField;
     @Getter
@@ -32,9 +34,11 @@ public class AuthForm implements SetTextListener {
     private JLabel usernameLabel;
     private JLabel passwordLabel;
     private JLabel errorLabel;
+    @Getter
     private JButton registerButton;
     private JLabel registerButtonLabel;
 
+    @Setter
     private RegisterFrame registrationFrame;
 
     private String lastUsedErrorBundle = "";
@@ -45,12 +49,7 @@ public class AuthForm implements SetTextListener {
     public AuthForm(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         applicationContext.getBean(LocalePublisher.class).addSubscriber(this);
-        registerButton.addActionListener(e -> {
-            log.info("Clicked register button");
-            if (registrationFrame == null || !registrationFrame.isDisplayable()) {
-                EventQueue.invokeLater(() -> registrationFrame = applicationContext.getBean(RegisterFrame.class));
-            }
-        });
+
 
         loginButton.addActionListener(e -> {
             log.info("Clicked login button");

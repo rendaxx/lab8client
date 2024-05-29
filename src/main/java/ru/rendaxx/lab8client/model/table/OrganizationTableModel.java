@@ -10,11 +10,13 @@ import ru.rendaxx.lab8client.model.object.OrganizationType;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -65,9 +67,9 @@ public class OrganizationTableModel extends AbstractTableModel {
         return switch (columnIndex) {
             case 0 -> Long.class;
             case 1 -> String.class;
-            case 2 -> Double.class;
-            case 3 -> Double.class;
-            case 4 -> LocalDate.class;
+            case 2 -> String.class;
+            case 3 -> String.class;
+            case 4 -> String.class;
             case 5 -> Long.class;
             case 6 -> String.class;
             case 7 -> Long.class;
@@ -86,21 +88,48 @@ public class OrganizationTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         OrganizationDto org = (OrganizationDto) organizationService.getOrganizationList().toArray()[rowIndex]; // god forgive me
-        return switch (columnIndex) {
-            case 0 -> org.getId();
-            case 1 -> org.getName();
-            case 2 -> org.getX();
-            case 3 -> org.getY();
-            case 4 -> org.getLocalDate();
-            case 5 -> org.getAnnualTurnover();
-            case 6 -> org.getFullName();
-            case 7 -> org.getEmployeesCount();
-            case 8 -> org.getOrganizationType();
-            case 9 -> org.getStreet();
-            case 10 -> org.getZipCode();
-            case 11 -> org.getCreatorName();
-            default -> null;
-        };
+        switch (columnIndex) {
+            case 0 -> {
+                return org.getId();
+            }
+            case 1 -> {
+                return org.getName();
+            }
+            case 2 -> {
+                return NumberFormat.getInstance(Locale.getDefault()).format(org.getX());
+            }
+            case 3 -> {
+                return NumberFormat.getInstance(Locale.getDefault()).format(org.getY());
+            }
+            case 4 -> {
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(Locale.getDefault());
+                return org.getLocalDate().format(dateFormatter);
+            }
+            case 5 -> {
+                return org.getAnnualTurnover();
+            }
+            case 6 -> {
+                return org.getFullName();
+            }
+            case 7 -> {
+                return org.getEmployeesCount();
+            }
+            case 8 -> {
+                return org.getOrganizationType();
+            }
+            case 9 -> {
+                return org.getStreet();
+            }
+            case 10 -> {
+                return org.getZipCode();
+            }
+            case 11 -> {
+                return org.getCreatorName();
+            }
+            default -> {
+                return null;
+            }
+        }
     }
 
     @Override

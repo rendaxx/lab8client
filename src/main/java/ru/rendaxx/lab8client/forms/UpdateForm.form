@@ -21,9 +21,9 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="b9d2e" class="javax.swing.JLabel">
+              <component id="b9d2e" class="javax.swing.JLabel" binding="nameLabel">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text resource-bundle="bundles/add" key="form.name.label"/>
@@ -37,7 +37,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="4df77" class="javax.swing.JLabel">
+              <component id="4df77" class="javax.swing.JLabel" binding="xLabel">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -53,7 +53,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="80bd4" class="javax.swing.JLabel">
+              <component id="80bd4" class="javax.swing.JLabel" binding="yLabel">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -69,7 +69,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="31b14" class="javax.swing.JLabel">
+              <component id="31b14" class="javax.swing.JLabel" binding="annualTurnoverLabel">
                 <constraints>
                   <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -85,7 +85,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="4b705" class="javax.swing.JLabel">
+              <component id="4b705" class="javax.swing.JLabel" binding="fullNameLabel">
                 <constraints>
                   <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -101,7 +101,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="17fc9" class="javax.swing.JLabel">
+              <component id="17fc9" class="javax.swing.JLabel" binding="employeesCountLabel">
                 <constraints>
                   <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -117,7 +117,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="18aba" class="javax.swing.JLabel">
+              <component id="18aba" class="javax.swing.JLabel" binding="organizationTypeLabel">
                 <constraints>
                   <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -125,7 +125,7 @@
                   <text resource-bundle="bundles/add" key="form.organizationType.label"/>
                 </properties>
               </component>
-              <component id="98578" class="javax.swing.JLabel">
+              <component id="98578" class="javax.swing.JLabel" binding="streetLabel">
                 <constraints>
                   <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -141,7 +141,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="6d4fc" class="javax.swing.JLabel">
+              <component id="6d4fc" class="javax.swing.JLabel" binding="zipCodeLabel">
                 <constraints>
                   <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -194,5 +194,3 @@
     </children>
   </grid>
 </form>
-
-

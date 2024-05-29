@@ -7,6 +7,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ru.rendaxx.lab8client.client.RegistrationClient;
+import ru.rendaxx.lab8client.frame.AuthFrame;
+import ru.rendaxx.lab8client.frame.RegisterFrame;
 import ru.rendaxx.lab8client.util.LocalePublisher;
 import ru.rendaxx.lab8client.util.SetTextListener;
 import ru.rendaxx.lab8client.util.UserCredentials;
@@ -33,6 +35,7 @@ public class RegisterForm implements SetTextListener {
     private JLabel mainPasswordLabel;
     private JLabel repeatPasswordLabel;
     private JLabel errorLabel;
+    private JButton loginButton;
 
     private String lastUsedErrorBundle = "";
 
@@ -77,6 +80,13 @@ public class RegisterForm implements SetTextListener {
             errorLabel.setText(resourceBundle.getString(lastUsedErrorBundle));
             errorLabel.setForeground(Color.BLACK);
         });
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.windowForComponent(registerPanel).dispose();
+                applicationContext.getBean(AuthFrame.class).setVisible(true);
+            }
+        });
     }
 
     @Override
@@ -86,6 +96,7 @@ public class RegisterForm implements SetTextListener {
         usernameLabel.setText(resourceBundle.getString("form.username.label"));
         mainPasswordLabel.setText(resourceBundle.getString("form.password.main.label"));
         repeatPasswordLabel.setText(resourceBundle.getString("form.password.repeat.label"));
+        loginButton.setText(resourceBundle.getString("form.login.button"));
         if (!lastUsedErrorBundle.isEmpty()) errorLabel.setText(resourceBundle.getString(lastUsedErrorBundle));
     }
 

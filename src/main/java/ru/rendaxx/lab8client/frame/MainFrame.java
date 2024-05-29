@@ -51,6 +51,7 @@ public class MainFrame extends JFrame implements SetTextListener, UpdateListener
     public void setText() {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("bundles/main");
         setTitle(resourceBundle.getString("main.frame.title"));
+
     }
 
     @Override

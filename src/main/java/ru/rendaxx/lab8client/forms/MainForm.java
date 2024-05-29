@@ -21,6 +21,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -120,14 +121,18 @@ public class MainForm implements SetTextListener, UpdateListener {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                filter(filterField.getText(), (int) columSpinner.getValue());
             }
 
             private void filter(String text, int column) {
                 if (text.trim().isEmpty()) {
                     sorter.setRowFilter(null);
                 } else {
-                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, column));
+                    try {
+                        sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, column));
+                    } catch (Exception e) {
+                        log.warning(e.getMessage());
+                    }
                 }
             }
         });
@@ -159,6 +164,10 @@ public class MainForm implements SetTextListener, UpdateListener {
         canvasButton.setText(resourceBundle.getString("form.canvas.button"));
         addButton.setText(resourceBundle.getString("form.add.button"));
         filterLabel.setText(resourceBundle.getString("form.filter.label"));
+        JTableHeader tableHeader = organizationTable.getTableHeader();
+        for (int i = 0; i < 12; ++i) {
+            tableHeader.getColumnModel().getColumn(i).setHeaderValue(organizationTable.getColumnName(i));
+        }
     }
 
     @Override

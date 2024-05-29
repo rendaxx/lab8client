@@ -5,17 +5,20 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import ru.rendaxx.lab8client.client.AddCommandClient;
 import ru.rendaxx.lab8client.client.UpdateCommandClient;
 import ru.rendaxx.lab8client.model.object.OrganizationDto;
 import ru.rendaxx.lab8client.model.object.OrganizationType;
+import ru.rendaxx.lab8client.util.SetTextListener;
 import ru.rendaxx.lab8client.util.UserSession;
 
 import javax.swing.*;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 @Getter
 @Component
-public class UpdateForm {
+public class UpdateForm implements SetTextListener {
     private JPanel rootPanel;
     private JTextField nameField;
     private JButton addButton;
@@ -31,6 +34,15 @@ public class UpdateForm {
     private Long id;
 
     private JComboBox<OrganizationType> comboBox1;
+    private JLabel nameLabel;
+    private JLabel xLabel;
+    private JLabel yLabel;
+    private JLabel annualTurnoverLabel;
+    private JLabel fullNameLabel;
+    private JLabel employeesCountLabel;
+    private JLabel organizationTypeLabel;
+    private JLabel streetLabel;
+    private JLabel zipCodeLabel;
 
     private ApplicationContext applicationContext;
     private UserSession userSession;
@@ -39,6 +51,7 @@ public class UpdateForm {
     public UpdateForm(ApplicationContext applicationContext, UserSession userSession) {
         this.applicationContext = applicationContext;
         this.userSession = userSession;
+        setText();
         addButton.addActionListener(e -> {
             String name = nameField.getText();
             Double x = Double.valueOf(xField.getText());
@@ -56,5 +69,28 @@ public class UpdateForm {
 
     private void createUIComponents() {
         comboBox1 = new JComboBox<>(OrganizationType.values());
+    }
+
+    @Override
+    public void setText() {
+        if (!xField.getText().isEmpty()) {
+            xField.setText(NumberFormat.getNumberInstance(Locale.getDefault()).format(Double.valueOf(xField.getText())));
+            yField.setText(NumberFormat.getNumberInstance(Locale.getDefault()).format(Double.valueOf(yField.getText())));
+        }
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("bundles/add");
+        nameLabel.setText(resourceBundle.getString("form.name.label"));
+        xLabel.setText(resourceBundle.getString("form.x.label"));
+        yLabel.setText(resourceBundle.getString("form.y.label"));
+        annualTurnoverLabel.setText(resourceBundle.getString("form.annualTurnover.label"));
+        fullNameLabel.setText(resourceBundle.getString("form.fullName.label"));
+        employeesCountLabel.setText(resourceBundle.getString("form.employeesCount.label"));
+        organizationTypeLabel.setText(resourceBundle.getString("form.organizationType.label"));
+        streetLabel.setText(resourceBundle.getString("form.street.label"));
+        zipCodeLabel.setText(resourceBundle.getString("form.zipCode.label"));
+    }
+
+    @Override
+    public boolean isVisible() {
+        return rootPanel.isVisible();
     }
 }

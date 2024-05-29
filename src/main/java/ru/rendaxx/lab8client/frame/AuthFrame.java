@@ -16,7 +16,6 @@ import java.awt.*;
 import java.util.ResourceBundle;
 
 @Component
-@Scope("prototype")
 public class AuthFrame extends JFrame implements SetTextListener {
 
     private final ApplicationContext applicationContext;
@@ -32,7 +31,15 @@ public class AuthFrame extends JFrame implements SetTextListener {
 
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon.png")));
 
-        getContentPane().add(applicationContext.getBean(AuthForm.class).getAuthPanel());
+        AuthForm authForm =applicationContext.getBean(AuthForm.class);
+        add(authForm.getAuthPanel());
+
+        authForm.getRegisterButton().addActionListener(e -> {
+            if (authForm.getRegistrationFrame() == null || !authForm.getRegistrationFrame().isDisplayable()) {
+                EventQueue.invokeLater(() -> authForm.setRegistrationFrame(applicationContext.getBean(RegisterFrame.class)));
+                this.setVisible(false);
+            }
+        });
 
         JMenuBar menuBar = applicationContext.getBean(DefaultMenuBar.class);
         setJMenuBar(menuBar);

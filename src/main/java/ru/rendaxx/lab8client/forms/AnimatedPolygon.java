@@ -1,4 +1,4 @@
-package ru.rendaxx.lab8client.frame;
+package ru.rendaxx.lab8client.forms;
 
 import ru.rendaxx.lab8client.canvas.CanvasPanel;
 import ru.rendaxx.lab8client.model.object.OrganizationDto;

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.rendaxx.lab8client.canvas.CanvasPanel;
 import ru.rendaxx.lab8client.client.DeleteCommandClient;
 import ru.rendaxx.lab8client.client.UpdateHandler;
+import ru.rendaxx.lab8client.forms.AnimatedPolygon;
 import ru.rendaxx.lab8client.forms.DefaultMenuBar;
 import ru.rendaxx.lab8client.model.OrganizationService;
 import ru.rendaxx.lab8client.model.object.OrganizationDto;
